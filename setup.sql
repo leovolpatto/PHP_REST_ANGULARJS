@@ -1,0 +1,12 @@
+CREATE DATABASE php_rest
+  DEFAULT CHARACTER SET utf8
+  DEFAULT COLLATE utf8_general_ci;
+
+
+CREATE TABLE pessoas (
+    id INT(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(30) NOT NULL,
+    sobrenome VARCHAR(80) NOT NULL,
+    idade INT,
+    ativa BOOLEAN
+);
