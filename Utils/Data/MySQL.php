@@ -1,0 +1,123 @@
+<?php
+
+namespace Utils\Data;
+
+final class MySQL {
+
+    /**
+     * @var \mysqli
+     */
+    private $connection;
+    private static $singleton;
+
+    public function __construct() {
+        $this->connection = new \mysqli(
+                "localhost", 
+                "root", 
+                "*", 
+                "php_rest", 
+                3306);
+        $this->connection->set_charset("utf8");
+    }
+
+    /**
+     * @return MySQL
+     */
+    public static function Instance() {
+        if (!isset(MySQL::$singleton) || MySQL::$singleton == null)
+            MySQL::$singleton = new MySQL();
+
+        return MySQL::$singleton;
+    }
+
+    public function EscapeString($unescapedString) {
+        return $this->connection->real_escape_string($unescapedString);
+    }
+
+    /**
+     * @param string $qry
+     * @param string $className
+     * @return MySqlResult
+     */
+    public function selectObject($qry, $className) {
+        $result = $this->connection->query($qry);
+
+        if (!$result) {
+            if (isset($result) && $result instanceof \mysqli_result) {
+                $result->free();
+            }
+            
+            return MySqlResult::Create(false, "", null);
+        }
+
+        if ($result instanceof \mysqli_result) {
+            $resultArray = $this->buildObject($result, $className);
+            $result->free();
+            return MySqlResult::CreateSelect(true, "", $resultArray);
+        }
+
+        return MySqlResult::CreateSelect($result, "", $result);
+    }
+    
+    private function buildObject(\mysqli_result $result, $className){
+        $resultArray = array();
+        while (($x = $result->fetch_object($className)) != null) {
+            array_push($resultArray, $x);
+        }
+        
+        return $resultArray;
+    }
+    
+    public function Select($qry, $resultType = MYSQLI_ASSOC) {
+        $result = $this->connection->query($qry);
+
+        if (!$result) {
+            if (isset($result) && $result instanceof \mysqli_result) {
+                $result->free();
+            }
+
+            return new DataBaseResult(false, null, new DataBaseResultArgs($qry, $this->connection, $result));
+        }
+
+        if ($result instanceof \mysqli_result) {
+            $resultArray = $this->BuildArray($result, $resultType);
+            $result->free();
+            return new DataBaseResult(true, $resultArray, new DataBaseResultArgs($qry, $this->connection, $result));
+        }
+
+        if (is_bool($result))
+            return new DataBaseResult($result, $result, new DataBaseResultArgs($qry, $this->connection, $result));
+
+        return new DataBaseResult(true, $result, new DataBaseResultArgs($qry, $this->connection, $result));
+    }
+
+    private function BuildArray(\mysqli_result $result, $resultType) {
+        $resultArray = array();
+
+        while (($x = $result->fetch_array($resultType)) != null) {
+            array_push($resultArray, $x);
+        }
+        return $resultArray;
+    }
+
+
+    /**
+     * @param type $qry
+     * @return MySqlResult
+     */
+    public function execute($qry) {
+        $dbResult = $this->connection->query($qry);
+
+        if (is_bool($dbResult) && $dbResult === true) {
+            $insertID = $this->connection->insert_id;
+            return MySqlResult::Create(true, "", $insertID);
+        } else if (is_object($dbResult)) {
+            if ($dbResult instanceof \mysqli_result) {
+                $insertID = $this->connection->insert_id;
+                return MySqlResult::Create(true, "", $insertID);
+            }
+        }
+
+        return MySqlResult::Create(false, "", null);
+    }
+}

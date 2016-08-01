@@ -3,7 +3,6 @@
 require_once './AutoLoader.php';
 
 
-$p = \Models\Pessoa::Create('nome', 'sobrenome', 34, true);
+$x = \Utils\Data\MySQL::Instance()->selectObject("SELECT * FROM pessoas", "\Models\Pessoa");
 
-
-var_dump($p);
+var_dump($x->getResultArray());
