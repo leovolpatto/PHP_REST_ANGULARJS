@@ -14,7 +14,7 @@ final class MySQL {
         $this->connection = new \mysqli(
                 "localhost", 
                 "root", 
-                "*", 
+                "spring", 
                 "php_rest", 
                 3306);
         $this->connection->set_charset("utf8");
@@ -30,7 +30,7 @@ final class MySQL {
         return MySQL::$singleton;
     }
 
-    public function EscapeString($unescapedString) {
+    public function escapeString($unescapedString) {
         return $this->connection->real_escape_string($unescapedString);
     }
 
@@ -47,16 +47,16 @@ final class MySQL {
                 $result->free();
             }
             
-            return MySqlResult::Create(false, "", null);
+            return MySqlResult::Create(false, $this->connection->error, null);
         }
 
         if ($result instanceof \mysqli_result) {
             $resultArray = $this->buildObject($result, $className);
             $result->free();
-            return MySqlResult::CreateSelect(true, "", $resultArray);
+            return MySqlResult::CreateSelect(true, $this->connection->error, $resultArray);
         }
 
-        return MySqlResult::CreateSelect($result, "", $result);
+        return MySqlResult::CreateSelect($result, $this->connection->error, $result);
     }
     
     private function buildObject(\mysqli_result $result, $className){
@@ -68,7 +68,11 @@ final class MySQL {
         return $resultArray;
     }
     
-    public function Select($qry, $resultType = MYSQLI_ASSOC) {
+    /**
+     * @param string $qry
+     * @return MySqlResult
+     */
+    public function select($qry) {
         $result = $this->connection->query($qry);
 
         if (!$result) {
@@ -76,19 +80,20 @@ final class MySQL {
                 $result->free();
             }
 
-            return new DataBaseResult(false, null, new DataBaseResultArgs($qry, $this->connection, $result));
+            return MySqlResult::CreateSelect(false, $this->connection->error, null);
         }
 
         if ($result instanceof \mysqli_result) {
-            $resultArray = $this->BuildArray($result, $resultType);
+            $resultArray = $this->BuildArray($result, MYSQLI_ASSOC);
             $result->free();
-            return new DataBaseResult(true, $resultArray, new DataBaseResultArgs($qry, $this->connection, $result));
+            return MySqlResult::CreateSelect(true, $this->connection->error, $resultArray);
         }
 
-        if (is_bool($result))
-            return new DataBaseResult($result, $result, new DataBaseResultArgs($qry, $this->connection, $result));
+        if (is_bool($result)){
+            return MySqlResult::CreateSelect($result, $this->connection->error, $result);
+        }
 
-        return new DataBaseResult(true, $result, new DataBaseResultArgs($qry, $this->connection, $result));
+        return MySqlResult::CreateSelect(false, $this->connection->error, null);
     }
 
     private function BuildArray(\mysqli_result $result, $resultType) {

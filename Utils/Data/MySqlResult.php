@@ -60,4 +60,8 @@ final class MySqlResult {
         return $this->result;
     }
     
+    public function getInsertID(){
+        return $this->insertID;
+    }
+    
 }
