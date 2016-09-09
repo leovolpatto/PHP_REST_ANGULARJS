@@ -2,7 +2,7 @@
 
 class Autoloader {
 
-    public static $APP_NAME = 'php-rest-angularjs';
+    public static $APP_NAME = 'phprest';
     
     public function __construct() {
         spl_autoload_register(array($this, 'loader'));

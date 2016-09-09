@@ -1,6 +1,6 @@
 <?php
 
-namespace API;
+namespace api;
 
 final class Request {
     
@@ -17,7 +17,7 @@ final class Request {
     }
     
     /**
-     * @return \API\Request
+     * @return \api\Request
      */
     public static function Create(){
         $r = new Request();

@@ -14,8 +14,8 @@ final class MySQL {
         $this->connection = new \mysqli(
                 "localhost", 
                 "root", 
-                "spring", 
-                "php_rest", 
+                "1234", 
+                "php-rest", 
                 3306);
         $this->connection->set_charset("utf8");
     }

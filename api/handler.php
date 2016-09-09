@@ -2,7 +2,7 @@
 
 require_once '../AutoLoader.php';
 
-$routerConfigs = new API\RouteConfigs();
+$routerConfigs = new api\RouteConfigs();
 $router = $routerConfigs->buildRouter();
 
 $router->routeRequest();
