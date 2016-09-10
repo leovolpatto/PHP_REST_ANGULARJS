@@ -22,11 +22,11 @@ final class RouteConfigs {
     
     private function setPessoaRoutes(){
         $this->router
-                ->addRoute(Router::HTTP_METHOD_GET, "pessoas", new Resources\Resource())
-                ->addRoute(Router::HTTP_METHOD_GET, "pessoas/:id", new Resources\Resource())
-                ->addRoute(Router::HTTP_METHOD_POST, "pessoas", new Resources\Resource())
-                ->addRoute(Router::HTTP_METHOD_PUT, "pessoas", new Resources\Resource())
-                ->addRoute(Router::HTTP_METHOD_DELETE, "pessoas/:id", new Resources\Resource());
+                ->addRoute(Router::HTTP_METHOD_GET, "pessoas", new Resources\Resource(), "listarPessoas")
+                ->addRoute(Router::HTTP_METHOD_GET, "pessoas/:id", new Resources\Resource(), "listarPessoa")
+                ->addRoute(Router::HTTP_METHOD_POST, "pessoas", new Resources\Resource(), "incluirPessoa")
+                ->addRoute(Router::HTTP_METHOD_PUT, "pessoas", new Resources\Resource(), "alterarPessoa")
+                ->addRoute(Router::HTTP_METHOD_DELETE, "pessoas/:id", new Resources\Resource(), "excluirPessoas");
     }
     
 }
