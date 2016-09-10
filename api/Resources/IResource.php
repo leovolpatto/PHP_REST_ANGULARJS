@@ -9,4 +9,6 @@ interface IResource {
      */
     public function getResponse();
     
+    public function setRequest(\api\Request $request);
+    
 }

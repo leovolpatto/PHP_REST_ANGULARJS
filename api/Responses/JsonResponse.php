@@ -42,8 +42,8 @@ final class JsonResponse implements IRestResponse{
      * @return \Responses\JsonResponse
      */
     public static function CreateOkResponse($obj){
-        $r = new JsonResponse();
-        $r->content = json_encode($obj);
+        $r = new JsonResponse();        
+        $r->content = json_encode($obj);        
         $r->message = "OK";
         return $r;
     }

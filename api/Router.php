@@ -45,22 +45,30 @@ final class Router {
     public function routeRequest(){
         $request = Request::Create();
         
-        $route = $this->getRoute($request);        
+        $route = $this->getRoute($request);    
+        
         if($route == null){
-            $errorResponse = JsonResponse::CreateNotFoundResponse("Recurso nao encontrado");
-            $this->sendResponse($errorResponse);
+            $response = JsonResponse::CreateNotFoundResponse("Recurso nao encontrado");
+            $this->sendResponse($response);
             die;
         }
         
-        $this->invokeResource($route);
+        $response = $this->invokeResource($route, $request);
+        $this->sendResponse($response);
     }
     
-    private function invokeResource(RouteDefinition $routeDefinition){
+    /**
+     * @param \api\RouteDefinition $routeDefinition
+     * @return IRestResponse
+     */
+    private function invokeResource(RouteDefinition $routeDefinition, Request $request){
         $resource = $routeDefinition->handler;
+        $resource->setRequest($request);
         $method = $routeDefinition->handlerMethod;
         
         $reflectionMethod = new \ReflectionMethod($resource, $method); //usamos reflection para invokar o metodo que irá tratar nosso request
-        $reflectionMethod->invoke($resource, '');
+        $reflectionMethod->invoke($resource, $routeDefinition->parameters);
+        return $resource->getResponse();
         
     }
     
@@ -114,6 +122,8 @@ final class Router {
             if($urlRota != $urlRequesst){
                 if(!$this->isParameter($urlRota)){ //se nao for igual e também não for um parametro, sai.
                     return null;
+                }else{
+                    $def->addParameter($urlRota, $urlRequesst);
                 }
             }
         }
@@ -147,4 +157,14 @@ class RouteDefinition{
      * @var string
      */
     public $handlerMethod;
+    /**
+     * Parametros da url
+     * @var array
+     */
+    public $parameters = array();
+    
+    public function addParameter($key, $value){
+        $key = str_replace(":", "", $key);//removemos o : do parametro
+        $this->parameters[$key] = $value;
+    }
 }

@@ -4,12 +4,15 @@ namespace Models;
 
 final class Pessoa {
     
-    private $id;
-    private $nome;
-    private $sobrenome;
-    private $idade;
-    private $ativa;
+    public $id;
+    public $nome;
+    public $sobrenome;
+    public $idade;
+    public $ativa;
     
+    /**
+     * @return \Models\Pessoa
+     */
     public static function Create($nome, $sobrenome, $idade, $ativa, $id = null){
         $pessoa = new Pessoa();
         $pessoa->setAtiva($ativa);

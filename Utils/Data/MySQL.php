@@ -15,7 +15,7 @@ final class MySQL {
                 "localhost", 
                 "root", 
                 "1234", 
-                "php-rest", 
+                "php_rest", 
                 3306);
         $this->connection->set_charset("utf8");
     }
