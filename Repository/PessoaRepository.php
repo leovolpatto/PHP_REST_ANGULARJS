@@ -11,15 +11,39 @@ final class PessoaRepository extends Repository{
      * @return boolean
      */
     public function salvar(Pessoa $pessoa){
-        return true;
+        if($this->carregar($pessoa->id) == null){//pessoa realmente existe?
+            return false;
+        }
+        
+        $qry = "UPDATE pessoas SET nome='{$pessoa->nome}', sobrenome='{$pessoa->sobrenome}', idade='{$pessoa->idade}',ativa='{$pessoa->ativa}' WHERE id = '{$pessoa->id}';";
+        $resultado = \Utils\Data\MySQL::Instance()->execute($qry);
+        return $resultado->isSuccess();
+    }
+    
+    /**
+     * Salva uma pessoa (na tabela com auto-increment e, caso sucesso, retorna o id gerado, senão, null
+     * @param Pessoa $pessoa
+     * @return int
+     */
+    public function incluirNovaPessoa(Pessoa $pessoa){        
+        $qry = "INSERT INTO pessoas (nome, sobrenome, idade, ativa) VALUES ('{$pessoa->nome}', '{$pessoa->sobrenome}', '{$pessoa->idade}', '{$pessoa->ativa}');";
+        $resultado = \Utils\Data\MySQL::Instance()->execute($qry);
+        $idInseridoPeloMySQL = $resultado->getInsertID();
+        if(!$resultado->isSuccess()){
+            return null;
+        }
+        
+        return $idInseridoPeloMySQL;
     }
 
     /**
-     * @param Pessoa $pessoa
+     * @param int $id
      * @return boolean
      */
-    public function excluir(Pessoa $pessoa){
-        return true;
+    public function excluir($id){
+        $qry = "DELETE from pessoas WHERE id = '$id';";
+        $resultado = \Utils\Data\MySQL::Instance()->execute($qry);
+        return $resultado->isSuccess();
     }
     
     /**
@@ -57,9 +81,4 @@ final class PessoaRepository extends Repository{
         
         return $pessoas;
     }
-
-    protected function getTableName() {
-        return "pessoas";
-    }
-
 }

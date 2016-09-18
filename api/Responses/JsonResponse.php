@@ -35,7 +35,7 @@ final class JsonResponse implements IRestResponse{
     }
     
     public function getMessage() {
-        return $this->statusCode;
+        return $this->message;
     }
     
     /**

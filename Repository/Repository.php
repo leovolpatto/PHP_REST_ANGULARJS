@@ -8,6 +8,6 @@ namespace Repository;
  */
 abstract class Repository {
     
-    protected abstract function getTableName();
+    
     
 }
