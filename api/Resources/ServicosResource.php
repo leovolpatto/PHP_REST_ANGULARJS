@@ -24,7 +24,7 @@ final class ServicosResource extends Resource{
     /**
      * @return \Models\Servico
      */
-    private function criarServidoDeRequest(){        
+    private function criarServicoDeRequest(){        
         $jsonEnviado = $this->request->payload;
         $obj = json_decode($jsonEnviado);
         
@@ -62,7 +62,7 @@ final class ServicosResource extends Resource{
      */
     public function putServico(){
         $repository = new \Repository\ServicoRepository();
-        $servico = $this->criarServidoDeRequest();
+        $servico = $this->criarServicoDeRequest();
         
         if($servico->id == null){
             $this->definirResultado(400, "id, necessario para atualizar, nao foi informado");
@@ -81,7 +81,7 @@ final class ServicosResource extends Resource{
      */
     public function postServico(){
         $repository = new \Repository\ServicoRepository();
-        $servico = $this->criarServidoDeRequest();
+        $servico = $this->criarServicoDeRequest();
         
         $resultado = $repository->inserirServico($servico);
         if($resultado != null){
