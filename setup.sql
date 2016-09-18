@@ -10,3 +10,23 @@ CREATE TABLE pessoas (
     idade INT,
     ativa BOOLEAN
 );
+
+
+CREATE TABLE servicos (
+    id INT(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    descricao VARCHAR(100) NOT NULL
+);
+
+
+CREATE TABLE historicos (
+    id INT(8) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    idPessoa INT(8) UNSIGNED,
+    idServico INT(8) UNSIGNED,
+    descricao VARCHAR(100),
+    valor decimal(8,2),
+    `data` timestamp DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (idPessoa)
+        REFERENCES pessoas(id) ON DELETE CASCADE
+    FOREIGN KEY (idServico)
+        REFERENCES servicos(id) ON DELETE SET NULL
+);

@@ -16,6 +16,7 @@ final class RouteConfigs {
         $this->router = new Router();
         
         $this->setPessoaRoutes();
+        $this->setServicoRoutes();
         
         return $this->router;
     }
@@ -27,6 +28,15 @@ final class RouteConfigs {
                 ->addRoute(Router::HTTP_METHOD_POST, "pessoas", new Resources\PessoasResource(), "incluirPessoa")
                 ->addRoute(Router::HTTP_METHOD_PUT, "pessoas", new Resources\PessoasResource(), "alterarPessoa")
                 ->addRoute(Router::HTTP_METHOD_DELETE, "pessoas/:id", new Resources\PessoasResource(), "excluirPessoa");
+    }
+    
+    private function setServicoRoutes(){
+        $this->router
+                ->addRoute(Router::HTTP_METHOD_GET, "servicos", new Resources\ServicosResource(), "getServicos")
+                ->addRoute(Router::HTTP_METHOD_GET, "servicos/:id", new Resources\ServicosResource(), "getServico")
+                ->addRoute(Router::HTTP_METHOD_POST, "servicos", new Resources\ServicosResource(), "postServico")
+                ->addRoute(Router::HTTP_METHOD_PUT, "servicos", new Resources\ServicosResource(), "putServico")
+                ->addRoute(Router::HTTP_METHOD_DELETE, "servicos/:id", new Resources\ServicosResource(), "deleteServico");
     }
     
 }
