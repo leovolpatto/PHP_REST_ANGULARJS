@@ -64,7 +64,7 @@ final class ServicosResource extends Resource{
         $repository = new \Repository\ServicoRepository();
         $servico = $this->criarServicoDeRequest();
         
-        if($servico->id == null){
+        if(empty($servico->id)){
             $this->definirResultado(400, "id, necessario para atualizar, nao foi informado");
         }
         

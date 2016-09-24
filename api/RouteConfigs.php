@@ -28,6 +28,13 @@ final class RouteConfigs {
                 ->addRoute(Router::HTTP_METHOD_POST, "pessoas", new Resources\PessoasResource(), "incluirPessoa")
                 ->addRoute(Router::HTTP_METHOD_PUT, "pessoas", new Resources\PessoasResource(), "alterarPessoa")
                 ->addRoute(Router::HTTP_METHOD_DELETE, "pessoas/:id", new Resources\PessoasResource(), "excluirPessoa");
+        
+        $this->router
+                ->addRoute(Router::HTTP_METHOD_GET, "pessoas/:idPessoa/historicos", new Resources\HistoricosResource(), "listarTodosHistoricos")
+                ->addRoute(Router::HTTP_METHOD_GET, "pessoas/:idPessoa/historicos/:idHistorico", new Resources\HistoricosResource(), "listarHistorico")
+                ->addRoute(Router::HTTP_METHOD_POST, "pessoas/:idPessoa/historicos", new Resources\HistoricosResource(), "incluirHistorico")
+                ->addRoute(Router::HTTP_METHOD_PUT, "pessoas/:idPessoa/historicos", new Resources\HistoricosResource(), "alterarHistorico")
+                ->addRoute(Router::HTTP_METHOD_DELETE, "pessoas/:idPessoa/historicos/:idHistorico", new Resources\HistoricosResource(), "excluirHistorico");
     }
     
     private function setServicoRoutes(){
